@@ -1,0 +1,37 @@
+name: Test
+
+on:
+  push:
+    branches:
+     - '*'
+
+jobs:
+  build:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      TEST_ENV: foo
+    steps:
+      - name: Run
+        run: |
+          echo $TEST_ENV > test-$TEST_ENV.txt
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: 1.0.0
+          release_name: Release ${{ env.TEST_ENV }}
+          draft: false
+          prerelease: false
+
+      - name: Upload rustc
+        id: upload-rustc
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: test-${{ env.TEST_ENV }}.txt
+          asset_name: test-${{ env.TEST_ENV }}.txt
+          asset_content_type: text/plain
