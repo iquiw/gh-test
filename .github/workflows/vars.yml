@@ -11,6 +11,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: jq is available?
+        run: |
+          jq --version
       - name: vars
         run: |
           echo "${{ github.event.release.tag_name }}"
