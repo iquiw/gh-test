@@ -11,19 +11,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
       versions: ${{ steps.fcos-version.outputs.matrix }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Set matrix
-        id: set-matrix
-        run: echo "::set-output name=matrix::{\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}"
       - name: Set release version
         id: fcos-version
         run: |
           version=$(jq '.architectures.x86_64.artifacts.metal.release' stable.json)
-          echo "::set-output name=matrix::{\"version\":[\"1.0.0\",\"1.2.3\",$version]}"
+          echo "::set-output name=matrix::{\"version\":[]}"
+        # echo "::set-output name=matrix::{\"version\":[\"1.0.0\",\"1.2.3\",$version]}"
       - name: github
         run: |
           echo "${{ toJSON(github) }}"
