@@ -46,9 +46,13 @@ jobs:
   show-version:
     runs-on: ubuntu-latest
     needs: build
-    strategy:
-      matrix: "${{fromJSON(needs.build.outputs.versions)}}"
+    # strategy:
+    #   matrix: "${{fromJSON(needs.build.outputs.versions)}}"
     steps:
       - name: vars
         run: |
-          echo "${{ matrix.version }}"
+          echo "${{fromJSON(needs.build.outputs.matrix)}}"
+          echo "${{fromJSON(needs.build.outputs.versions)}}"
+      # - name: vars
+        # run: |
+        #   echo "${{ matrix.version }}"
