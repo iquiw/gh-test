@@ -17,7 +17,7 @@ jobs:
         id: fcos-version
         run: |
           version=$(jq -r '.architectures.x86_64.artifacts.metal.release' stable.json)
-          echo "::set-output name=version:$version"
+          echo "::set-output name=version::$version"
       - name: vars
         run: |
           echo "${{ steps.fcos-version.outputs.version }}"
