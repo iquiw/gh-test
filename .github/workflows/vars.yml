@@ -11,12 +11,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: jq is available?
+      - name: Set release version
+        id: fcos-version
         run: |
-          jq --version
+          version=$(jq -r '.architectures.x86_64.artifacts.metal.release' stable.json)
+          echo "::set-output name=version:$version"
       - name: vars
         run: |
-          echo "${{ github.event.release.tag_name }}"
+          echo "${{ steps.fcos-version.outputs.version }}"
       - name: github
         run: |
           echo "${{ toJSON(github) }}"
