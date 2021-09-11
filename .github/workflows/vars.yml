@@ -11,10 +11,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      versions: "${{ steps.fcos-version.outputs.matrix }}"
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      versions: ${{ steps.fcos-version.outputs.matrix }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Set matrix
+        id: set-matrix
+        run: echo "::set-output name=matrix::{\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}"
       - name: Set release version
         id: fcos-version
         run: |
