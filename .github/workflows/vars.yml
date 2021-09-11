@@ -10,17 +10,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      versions: "${{ steps.fcos-version.outputs.matrix }}"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set release version
         id: fcos-version
         run: |
-          version=$(jq -r '.architectures.x86_64.artifacts.metal.release' stable.json)
-          echo "::set-output name=version::$version"
-      - name: vars
-        run: |
-          echo "${{ steps.fcos-version.outputs.version }}"
+          version=$(jq '.architectures.x86_64.artifacts.metal.release' stable.json)
+          echo "::set-output name=matrix::{\"version\":[\"1.0.0\",\"1.2.3\",\"$version\"]}"
       - name: github
         run: |
           echo "${{ toJSON(github) }}"
@@ -39,3 +38,13 @@ jobs:
       - name: needs
         run: |
           echo "${{ toJSON(needs) }}"
+
+  show-version:
+    runs-on: ubuntu-latest
+    needs: build
+    strategy:
+      matrix: "${{fromJSON(needs.build.outputs.versions)}}"
+    steps:
+      - name: vars
+        run: |
+          echo "${{ matrix.version }}"
