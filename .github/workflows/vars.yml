@@ -23,7 +23,7 @@ jobs:
         id: fcos-version
         run: |
           version=$(jq '.architectures.x86_64.artifacts.metal.release' stable.json)
-          echo "::set-output name=matrix::{\"version\":[\"1.0.0\",\"1.2.3\",\"$version\"]}"
+          echo "::set-output name=matrix::{\"version\":[\"1.0.0\",\"1.2.3\",$version]}"
       - name: github
         run: |
           echo "${{ toJSON(github) }}"
